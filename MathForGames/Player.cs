@@ -49,6 +49,12 @@ namespace MathForGames
             Position += Velocity;
         }
 
+        public override void Draw()
+        {
+
+            Engine.Render(_icon, Position += new Vector2 { X = Position.X + 1 });
+        }
+
         public override void OnCollision(Actor actor)
         {
             Engine.CloseApplication();
