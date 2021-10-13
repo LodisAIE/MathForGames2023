@@ -29,6 +29,10 @@ namespace MathLibrary
             return new Vector2 { X = lhs.X - rhs.X, Y = lhs.Y - rhs.Y };
         }
 
+        public static Vector2 operator -(Vector2 lhs)
+        {
+            return new Vector2 { X = -lhs.X, Y = -lhs.Y };
+        }
 
         /// <summary>
         /// Multiplies the vectors x and y values by the scalar

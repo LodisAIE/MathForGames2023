@@ -39,6 +39,12 @@ namespace MathForGames
         /// </summary>
         private void Start()
         {
+            Scene scene = new Scene();
+            Player player = new Player('.', 5, 5, 1, "Speed", ConsoleColor.DarkMagenta);
+            UIText text = new UIText(10, 10, "TestTextBox", ConsoleColor.Blue, 50, 20, "This is test text. It is not to be taken seriously as it is only a test. Anyone who says this isn't a test is lying and should be ignored.");
+            scene.AddUIElement(text);
+            scene.AddActor(player);
+            _currentSceneIndex = AddScene(scene);
             _scenes[_currentSceneIndex].Start();
         }
 
@@ -70,6 +76,7 @@ namespace MathForGames
 
             //Adds all actor icons to buffer
             _scenes[_currentSceneIndex].Draw();
+            _scenes[_currentSceneIndex].DrawUI();
 
             //Iterate through buffer
             for (int y = 0; y < _buffer.GetLength(1); y++)
@@ -88,6 +95,8 @@ namespace MathForGames
                 //Skip a line once the end of a row has been reached
                 Console.WriteLine();
             }
+
+            _scenes[_currentSceneIndex].DrawUI();
         }
 
         /// <summary>

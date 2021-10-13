@@ -28,6 +28,13 @@ namespace MathForGames
             _speed = speed;
         }
 
+
+        public override void Start()
+        {
+            base.Start();
+            Velocity = new Vector2 { X = 2, Y = 3 };
+        }
+
         public override void Update()
         {
             Vector2 moveDirection = new Vector2();
@@ -51,13 +58,20 @@ namespace MathForGames
 
         public override void Draw()
         {
-
-            Engine.Render(_icon, Position += new Vector2 { X = Position.X + 1 });
+            Engine.Render(Icon, Position);
+            //Engine.Render(Icon, Position + new Vector2 { X = 1 });
+            //Engine.Render(Icon, Position + new Vector2 { X = -1 });
+            //Engine.Render(Icon, Position + new Vector2 { X = 1, Y = -1 });
+            //Engine.Render(Icon, Position + new Vector2 { X = -1, Y = 1 });
+            //Engine.Render(Icon, Position + new Vector2 { X = -1, Y = -1 });
+            //Engine.Render(Icon, Position + new Vector2 { X = 1, Y = 1 });
+            //Engine.Render(Icon, Position + new Vector2 { Y = -1 });
+            //Engine.Render(Icon, Position + new Vector2 { Y = 1 });
         }
 
         public override void OnCollision(Actor actor)
         {
-            Engine.CloseApplication();
+            //Engine.CloseApplication();
         }
     }
 }

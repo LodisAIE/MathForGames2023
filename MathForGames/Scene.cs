@@ -10,12 +10,13 @@ namespace MathForGames
         /// Array that contains all actors in the scene
         /// </summary>
         private Actor[] _actors;
+        private Actor[] _UIElements;
 
         public Scene()
         {
             _actors = new Actor[0];
+            _UIElements = new Actor[0];
         }
-
 
         /// <summary>
         /// Calls start for all actors in the actors array
@@ -61,6 +62,14 @@ namespace MathForGames
             }
         }
 
+        public virtual void DrawUI()
+        {
+            for (int i = 0; i < _UIElements.Length; i++)
+            {
+                _UIElements[i].Draw();
+            }
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -89,6 +98,28 @@ namespace MathForGames
 
             //Add the new actor to the end of the new array
             tempArray[_actors.Length] = actor;
+
+            //Set the old array to be the new array
+            _actors = tempArray;
+        }
+
+        /// <summary>
+        /// Adds an actor to the scenes list of actors.
+        /// </summary>
+        /// <param name="UI">The actor to add to the scene</param>
+        public virtual void AddUIElement(Actor UI)
+        {
+            //Create a temp array larger than the original
+            Actor[] tempArray = new Actor[_actors.Length + 1];
+
+            //Copy all values from the original array into the temp array
+            for (int i = 0; i < _actors.Length; i++)
+            {
+                tempArray[i] = _actors[i];
+            }
+
+            //Add the new actor to the end of the new array
+            tempArray[_actors.Length] = UI;
 
             //Set the old array to be the new array
             _actors = tempArray;
