@@ -40,8 +40,8 @@ namespace MathForGames
         private void Start()
         {
             Scene scene = new Scene();
-            Player player = new Player('.', 5, 5, 1, "Speed", ConsoleColor.DarkMagenta);
-            UIText text = new UIText(10, 10, "TestTextBox", ConsoleColor.Blue, 50, 20, "This is test text. It is not to be taken seriously as it is only a test. Anyone who says this isn't a test is lying and should be ignored.");
+            Player player = new Player('.', 10, 10, 1, "Speed", ConsoleColor.DarkMagenta);
+            UIText text = new UIText(10, 10, "TestTextBox", ConsoleColor.Blue, 70, 20, "This is test text. \nIt is not to be taken seriously as it is only a test.\nAnyone who says this isn't a test is lying and should be ignored.");
             scene.AddUIElement(text);
             scene.AddActor(player);
             _currentSceneIndex = AddScene(scene);

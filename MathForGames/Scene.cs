@@ -110,19 +110,19 @@ namespace MathForGames
         public virtual void AddUIElement(Actor UI)
         {
             //Create a temp array larger than the original
-            Actor[] tempArray = new Actor[_actors.Length + 1];
+            Actor[] tempArray = new Actor[_UIElements.Length + 1];
 
             //Copy all values from the original array into the temp array
             for (int i = 0; i < _actors.Length; i++)
             {
-                tempArray[i] = _actors[i];
+                tempArray[i] = _UIElements[i];
             }
 
             //Add the new actor to the end of the new array
-            tempArray[_actors.Length] = UI;
+            tempArray[_UIElements.Length] = UI;
 
             //Set the old array to be the new array
-            _actors = tempArray;
+            _UIElements = tempArray;
         }
 
         /// <summary>

@@ -37,6 +37,13 @@ namespace MathForGames
                 //Set the icon symbol to be the current character in the array
                 currentLetter.Symbol = textChars[i];
 
+                if (currentLetter.Symbol =='\n')
+                {
+                    cursorPosX = (int)Position.X;
+                    cursorPosY++;
+                    continue;
+                }
+
                 //Add the current character to the buffer
                 Engine.Render(currentLetter, new Vector2 { X = cursorPosX, Y = cursorPosY });
 
