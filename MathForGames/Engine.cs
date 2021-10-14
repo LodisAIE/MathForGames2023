@@ -40,10 +40,16 @@ namespace MathForGames
         private void Start()
         {
             Scene scene = new Scene();
-            Player player = new Player('.', 10, 10, 1, "Speed", ConsoleColor.DarkMagenta);
-            UIText text = new UIText(10, 10, "TestTextBox", ConsoleColor.Blue, 70, 20, "This is test text. \nIt is not to be taken seriously as it is only a test.\nAnyone who says this isn't a test is lying and should be ignored.");
-            scene.AddUIElement(text);
+            Player player = new Player('@', 10, 10, 1, "Player", ConsoleColor.DarkMagenta);
+            Actor enemy = new Actor('E', 20, 10, "Enemy", ConsoleColor.Red);
+            UIText healthText = new UIText(20, 3, "Health", ConsoleColor.Blue, 10, 10);
+            UIText livesText = new UIText(20, 1, "Lives", ConsoleColor.Blue, 10, 10);
+            PlayerHud playerHud = new PlayerHud(player, healthText, livesText);
+            scene.AddUIElement(playerHud);
+            scene.AddUIElement(healthText);
+            scene.AddUIElement(livesText);
             scene.AddActor(player);
+            scene.AddActor(enemy);
             _currentSceneIndex = AddScene(scene);
             _scenes[_currentSceneIndex].Start();
         }
@@ -54,7 +60,7 @@ namespace MathForGames
         private void Update()
         {
             _scenes[_currentSceneIndex].Update();
-
+            _scenes[_currentSceneIndex].UpdateUI();
 
             while (Console.KeyAvailable)
                 Console.ReadKey(true);

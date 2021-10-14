@@ -51,6 +51,14 @@ namespace MathForGames
             }
         }
 
+        public virtual void UpdateUI()
+        {
+            for (int i = 0; i < _UIElements.Length; i++)
+            {
+                _UIElements[i].Update();
+            }
+        }
+
         /// <summary>
         /// Calls draw for every actor in the array
         /// </summary>
@@ -113,7 +121,7 @@ namespace MathForGames
             Actor[] tempArray = new Actor[_UIElements.Length + 1];
 
             //Copy all values from the original array into the temp array
-            for (int i = 0; i < _actors.Length; i++)
+            for (int i = 0; i < _UIElements.Length; i++)
             {
                 tempArray[i] = _UIElements[i];
             }

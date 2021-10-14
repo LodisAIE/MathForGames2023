@@ -9,6 +9,8 @@ namespace MathForGames
     {
         private float _speed;
         private Vector2 _velocity;
+        private float _health = 3;
+        private int _lives = 3;
 
         public float Speed
         {
@@ -22,6 +24,16 @@ namespace MathForGames
             set { _velocity = value; }
         }
 
+        public float Health
+        {
+            get { return _health; }
+        }
+
+        public int Lives
+        {
+            get { return _lives; }
+        }
+
         public Player(char icon, float x, float y, float speed, string name = "Actor", ConsoleColor color = ConsoleColor.White) 
             : base(icon, x, y, name, color)
         {
@@ -32,7 +44,6 @@ namespace MathForGames
         public override void Start()
         {
             base.Start();
-            Velocity = new Vector2 { X = 2, Y = 3 };
         }
 
         public override void Update()
@@ -59,19 +70,40 @@ namespace MathForGames
         public override void Draw()
         {
             Engine.Render(Icon, Position);
-            //Engine.Render(Icon, Position + new Vector2 { X = 1 });
-            //Engine.Render(Icon, Position + new Vector2 { X = -1 });
-            //Engine.Render(Icon, Position + new Vector2 { X = 1, Y = -1 });
-            //Engine.Render(Icon, Position + new Vector2 { X = -1, Y = 1 });
-            //Engine.Render(Icon, Position + new Vector2 { X = -1, Y = -1 });
-            //Engine.Render(Icon, Position + new Vector2 { X = 1, Y = 1 });
-            //Engine.Render(Icon, Position + new Vector2 { Y = -1 });
-            //Engine.Render(Icon, Position + new Vector2 { Y = 1 });
         }
 
         public override void OnCollision(Actor actor)
         {
-            //Engine.CloseApplication();
+            TakeDamage(1);
+        }
+
+        public float TakeDamage(float damageAmount)
+        {
+            float damageTaken = _health - damageAmount;
+
+            if (damageTaken < 0)
+                return 0;
+
+            _health -= damageAmount;
+
+            if (Health <= 0)
+                TryRespawn();
+
+            return damageAmount;
+        }
+
+        private void TryRespawn()
+        {
+            if (Lives <= 0)
+            { 
+                Engine.CloseApplication();
+                return;
+            }
+
+
+            Position = new Vector2 { X = 5, Y = 5 };
+            _lives--;
+            _health = 3;
         }
     }
 }
