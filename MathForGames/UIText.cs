@@ -45,8 +45,7 @@ namespace MathForGames
                     continue;
                 }
 
-                //Add the current character to the buffer
-                //Engine.Render(currentLetter, new Vector2 { X = cursorPosX, Y = cursorPosY });
+                
 
                 //Increment the cursor position so the letters are set side by side
                 cursorPosX++;
@@ -63,6 +62,9 @@ namespace MathForGames
                     //...leave the loop
                     break;
             }
+
+            //Add the current character to the buffer
+            Raylib.DrawText(Text, cursorPosX, cursorPosY, 10, Color.RED);
         }
     }
 }
