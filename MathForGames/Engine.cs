@@ -39,17 +39,21 @@ namespace MathForGames
         /// </summary>
         private void Start()
         {
+            //Create new scene
             Scene scene = new Scene();
+            //Create and add new actors to the scene
             Player player = new Player('@', 10, 10, 1, "Player", ConsoleColor.DarkMagenta);
             Actor enemy = new Actor('E', 20, 10, "Enemy", ConsoleColor.Red);
-            UIText healthText = new UIText(20, 3, "Health", ConsoleColor.Blue, 10, 10);
+            scene.AddActor(player);
+            scene.AddActor(enemy);
+
+            //Create and add UI for the scene
+            UIText healthText = new UIText(20, 3, "Health", ConsoleColor.Blue, 50, 10);
             UIText livesText = new UIText(20, 1, "Lives", ConsoleColor.Blue, 10, 10);
             PlayerHud playerHud = new PlayerHud(player, healthText, livesText);
             scene.AddUIElement(playerHud);
             scene.AddUIElement(healthText);
-            scene.AddUIElement(livesText);
-            scene.AddActor(player);
-            scene.AddActor(enemy);
+
             _currentSceneIndex = AddScene(scene);
             _scenes[_currentSceneIndex].Start();
         }

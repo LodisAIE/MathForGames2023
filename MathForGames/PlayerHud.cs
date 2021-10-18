@@ -17,10 +17,23 @@ namespace MathForGames
             _lives = lives;
         }
 
+        public override void Start()
+        {
+            base.Start();
+            _health.Start();
+            _lives.Start();
+        }
+
         public override void Update()
         {
             _health.Text = "Health: " + _player.Health.ToString();
             _lives.Text = "Lives: " + _player.Lives.ToString();
+        }
+
+        public override void Draw()
+        {
+            _health.Draw();
+            _lives.Draw();
         }
     }
 }

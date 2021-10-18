@@ -55,6 +55,9 @@ namespace MathForGames
         {
             for (int i = 0; i < _UIElements.Length; i++)
             {
+                if (!_UIElements[i].Started)
+                    _UIElements[i].Start();
+
                 _UIElements[i].Update();
             }
         }
@@ -112,9 +115,9 @@ namespace MathForGames
         }
 
         /// <summary>
-        /// Adds an actor to the scenes list of actors.
+        /// Adds an actor to the scenes list of ui elements.
         /// </summary>
-        /// <param name="UI">The actor to add to the scene</param>
+        /// <param name="UI">The ui actor to add to the scene</param>
         public virtual void AddUIElement(Actor UI)
         {
             //Create a temp array larger than the original

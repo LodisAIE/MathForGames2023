@@ -7,11 +7,52 @@ namespace MathForGames
 {
     class UIText : Actor
     {
-        public string Text;
-        public int Width;
-        public int Height;
+        private string _text;
+        private int _width;
+        private int _height;
 
-        public UIText(float x, float y, string name, ConsoleColor color, int width, int height, string text = "") : base('\0', x, y, name, color)
+
+        /// <summary>
+        /// The text that will appear inside the text box
+        /// </summary>
+        public string Text
+        {
+            get { return _text; }
+            set { _text = value; }
+        }
+
+        /// <summary>
+        /// The width of the text box. If the cursor is outside the max 
+        /// x position the text will wrap around.
+        /// </summary>
+        public int Width
+        {
+            get { return _width; }
+            set { _width = value; }
+        }
+
+        /// <summary>
+        /// The height of the text box. If the cursor is outside the max
+        /// y position the text is truncated.
+        /// </summary>
+        public int Height
+        {
+            get { return _height; }
+            set { _height = value; }
+        }
+
+        /// <summary>
+        /// Sets the starting values for the text box
+        /// </summary>
+        /// <param name="x">The x position of the text box</param>
+        /// <param name="y">The y position of the text box</param>
+        /// <param name="name">The name of the text box</param>
+        /// <param name="color">The color of the text</param>
+        /// <param name="width">How wide the text box is</param>
+        /// <param name="height">How tall the text box is</param>
+        /// <param name="text">The text that will be displayed</param>
+        public UIText(float x, float y, string name, ConsoleColor color, int width, int height, string text = "")
+            : base('\0', x, y, name, color)
         {
             Text = text;
             Width = width;
@@ -37,7 +78,7 @@ namespace MathForGames
                 //Set the icon symbol to be the current character in the array
                 currentLetter.Symbol = textChars[i];
 
-                if (currentLetter.Symbol =='\n')
+                if (currentLetter.Symbol == '\n')
                 {
                     cursorPosX = (int)Position.X;
                     cursorPosY++;
@@ -51,14 +92,14 @@ namespace MathForGames
                 cursorPosX++;
 
                 //Go to the next line if the cursor has reached the max position
-                if (cursorPosX - (int)Position.X > Width)
+                if (cursorPosX > (int)Position.X + Width)
                 {
                     //Reset the cursor x position and increase the y position
                     cursorPosX = (int)Position.X;
                     cursorPosY++;
                 }
                 //If the cursor has reached the maximum height...
-                if (cursorPosY - (int)Position.Y > Height)
+                if (cursorPosY > (int)Position.Y + Height)
                     //...leave the loop
                     break;
             }
