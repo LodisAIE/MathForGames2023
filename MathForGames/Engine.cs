@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
+using System.Diagnostics;
 using MathLibrary;
+using Raylib_cs;
 
 namespace MathForGames
 {
@@ -11,7 +13,7 @@ namespace MathForGames
         private static bool _applicationShouldClose = false;
         private static int _currentSceneIndex;
         private Scene[] _scenes = new Scene[0];
-        private static Icon[,] _buffer;
+        private Stopwatch _stopwatch = new Stopwatch();
 
         /// <summary>
         /// Called to begin the application
@@ -21,13 +23,26 @@ namespace MathForGames
             //Call start for the entire application
             Start();
 
+            float currentTime = 0;
+            float lastTime = 0;
+            float deltaTime = 0;
+
             //Loop until the application is told to close
-            while (!_applicationShouldClose)
+            while (!_applicationShouldClose && !Raylib.WindowShouldClose())
             {
-                Update();
+                //Get how much time has passed since the application started
+                currentTime = _stopwatch.ElapsedMilliseconds / 1000.0f;
+
+                //Set delta time to be the difference in time from the last time recorded to the current time
+                deltaTime = currentTime - lastTime;
+
+                //Update the application
+                Update(deltaTime);
+                //Draw all items
                 Draw();
 
-                Thread.Sleep(50);
+                //Set the last time recorded to be the current time
+                lastTime = currentTime;
             }
 
             //Call end for the entire application
@@ -39,11 +54,22 @@ namespace MathForGames
         /// </summary>
         private void Start()
         {
+            _stopwatch.Start();
+
+            //Create a window using raylib
+            Raylib.InitWindow(800, 450, "Math For Games");
+            Raylib.SetTargetFPS(60);
+
             Scene scene = new Scene();
-            Player player = new Player('.', 10, 10, 1, "Speed", ConsoleColor.DarkMagenta);
-            UIText text = new UIText(10, 10, "TestTextBox", ConsoleColor.Blue, 70, 20, "This is test text. \nIt is not to be taken seriously as it is only a test.\nAnyone who says this isn't a test is lying and should be ignored.");
-            scene.AddUIElement(text);
+            Player player = new Player('@', 10, 10, 50, Color.DARKPURPLE, "Player");
+            Actor actor = new Actor('A', 5, 5, Color.RED, "Actor");
+            //UI section
+            //UIText text = new UIText(10, 10, "TestTextBox", ConsoleColor.Blue, 70, 20, "This is test text. \nIt is not to be taken seriously as it is only a test.\nAnyone who says this isn't a test is lying and should be ignored.");
+            //scene.AddUIElement(text);
+
+
             scene.AddActor(player);
+            scene.AddActor(actor);
             _currentSceneIndex = AddScene(scene);
             _scenes[_currentSceneIndex].Start();
         }
@@ -51,9 +77,9 @@ namespace MathForGames
         /// <summary>
         /// Called everytime the game loops
         /// </summary>
-        private void Update()
+        private void Update(float deltaTime)
         {
-            _scenes[_currentSceneIndex].Update();
+            _scenes[_currentSceneIndex].Update(deltaTime);
 
 
             while (Console.KeyAvailable)
@@ -65,38 +91,14 @@ namespace MathForGames
         /// </summary>
         private void Draw()
         {
-
-            Console.CursorVisible = false;
-
-            //Clear the stuff that was on the screen in the last frame
-            _buffer = new Icon[Console.WindowWidth, Console.WindowHeight - 1];
-
-            //Reset the cursor position to the top so the previous screen is drawn over
-            Console.SetCursorPosition(0, 0);
+            Raylib.BeginDrawing();
+            Raylib.ClearBackground(Color.BLACK);
 
             //Adds all actor icons to buffer
             _scenes[_currentSceneIndex].Draw();
             _scenes[_currentSceneIndex].DrawUI();
 
-            //Iterate through buffer
-            for (int y = 0; y < _buffer.GetLength(1); y++)
-            {
-                for (int x = 0; x < _buffer.GetLength(0); x++)
-                {
-                    if (_buffer[x, y].Symbol == '\0')
-                        _buffer[x, y].Symbol = ' ';
-
-                    //Set console text color to be color of item at buffer
-                    Console.ForegroundColor = _buffer[x, y].Color;
-                    //Print the symbol of the item in the buffer
-                    Console.Write(_buffer[x, y].Symbol);
-                }
-
-                //Skip a line once the end of a row has been reached
-                Console.WriteLine();
-            }
-
-            _scenes[_currentSceneIndex].DrawUI();
+            Raylib.EndDrawing();
         }
 
         /// <summary>
@@ -105,6 +107,7 @@ namespace MathForGames
         private void End()
         {
             _scenes[_currentSceneIndex].End();
+            Raylib.CloseWindow();
         }
 
         /// <summary>
@@ -146,25 +149,6 @@ namespace MathForGames
 
             //Return the current key being pressed
             return Console.ReadKey(true).Key;
-        }
-
-        /// <summary>
-        /// Adds the icon to the buffer to print to the screen in the next draw call
-        /// Prints the icon at the given position in the buffer
-        /// </summary>
-        /// <param name="icon">The icon to draw</param>
-        /// <param name="position">The position of the icon in the buffer</param>
-        /// <returns>False if the position is outside the bounds of the buffer</returns>
-        public static bool Render(Icon icon, Vector2 position)
-        {
-            //If the position is out of bounds...
-            if (position.X < 0 || position.X >= _buffer.GetLength(0) || position.Y < 0 || position.Y >= _buffer.GetLength(1))
-                //...return false
-                return false;
-
-            //Set the buffer at the index of the given position to be the icon
-            _buffer[(int)position.X, (int)position.Y] = icon;
-            return true;
         }
 
         /// <summary>
