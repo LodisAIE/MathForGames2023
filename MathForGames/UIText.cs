@@ -11,60 +11,25 @@ namespace MathForGames
         public string Text;
         public int Width;
         public int Height;
+        public int FontSize;
+        public Font Font;
 
-        public UIText(float x, float y, string name, Color color, int width, int height, string text = "") : base('\0', x, y, color, name)
+        public UIText(float x, float y, string name, Color color, int width, int height, int fontSize, string text = "") : base('\0', x, y, color, name)
         {
             Text = text;
             Width = width;
             Height = height;
+            Font = Raylib.LoadFont("resources/fonts/alagard.png");
+            FontSize = fontSize;
         }
 
 
         public override void Draw()
         {
-            //Store the position of the cursor
-            int cursorPosX = (int)Position.X;
-            int cursorPosY = (int)Position.Y;
-
-            //Create a new icon to store the current character and color
-            Icon currentLetter = new Icon { Color = Icon.Color };
-
-            //Convert the string for text into a character array
-            char[] textChars = Text.ToCharArray();
-
-            //Iterate through all characters in the string
-            for (int i = 0; i < textChars.Length; i++)
-            {
-                //Set the icon symbol to be the current character in the array
-                currentLetter.Symbol = textChars[i];
-
-                if (currentLetter.Symbol =='\n')
-                {
-                    cursorPosX = (int)Position.X;
-                    cursorPosY++;
-                    continue;
-                }
-
-                
-
-                //Increment the cursor position so the letters are set side by side
-                cursorPosX++;
-
-                //Go to the next line if the cursor has reached the max position
-                if (cursorPosX - (int)Position.X > Width)
-                {
-                    //Reset the cursor x position and increase the y position
-                    cursorPosX = (int)Position.X;
-                    cursorPosY++;
-                }
-                //If the cursor has reached the maximum height...
-                if (cursorPosY - (int)Position.Y > Height)
-                    //...leave the loop
-                    break;
-            }
-
-            //Add the current character to the buffer
-            Raylib.DrawText(Text, cursorPosX, cursorPosY, 10, Color.RED);
+            //Create a new rectangle that will act as the borders of the text box
+            Rectangle textBox = new Rectangle(Position.X, Position.Y, Width, Height);
+            //Draw text box 
+            Raylib.DrawTextRec(Font, Text, textBox, FontSize, 1, true, Icon.Color);
         }
     }
 }

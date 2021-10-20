@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using MathLibrary;
 using Raylib_cs;
@@ -11,7 +12,10 @@ namespace MathForGames
         private float _speed;
         private Vector2 _velocity;
         private Actor _target;
-        public UIText _speechText;
+        private float _maxSightDistance;
+        public UIText SpeechText;
+        private float _maxViewAngle;
+        
 
         public float Speed
         {
@@ -25,11 +29,13 @@ namespace MathForGames
             set { _velocity = value; }
         }
 
-        public Enemy(char icon, float x, float y, float speed, Color color, Actor target, string name = "Actor")
+        public Enemy(char icon, float x, float y, float speed, float maxSightDistance, float maxViewAngle, Color color, Actor target, string name = "Actor")
             : base(icon, x, y, color, name)
         {
             _speed = speed;
             _target = target;
+            _maxSightDistance = maxSightDistance;
+            _maxViewAngle = maxViewAngle;
         }
 
 
@@ -40,16 +46,27 @@ namespace MathForGames
 
         public override void Update(float deltaTime)
         {
-            _speechText.Text = "Pls get away";
-            _speechText.Position = Position + new Vector2(0, -5);
+            SpeechText.Text = "Pls get away";
+            SpeechText.Position = Position + new Vector2(0, -5);
             //Create a vector that stores the move input
-            Vector2 moveDirection = (Position - _target.Position  ).Normalized;
+            Vector2 moveDirection = (_target.Position - Position).Normalized;
 
             Velocity = moveDirection * Speed * deltaTime;
 
-            Position += Velocity;
+            if (GetTargetInSight())
+                Position += Velocity;
 
             base.Update(deltaTime);
+        }
+
+        public bool GetTargetInSight()
+        {
+            Vector2 directionOfTarget = (_target.Position - Position).Normalized;
+            float distanceToTarget = Vector2.Distance(_target.Position, Position);
+
+            float dotProduct = Vector2.DotProduct(directionOfTarget, Forward);
+
+            return MathF.Acos(dotProduct) < _maxViewAngle && distanceToTarget < _maxSightDistance;
         }
 
         public override void OnCollision(Actor actor)

@@ -61,12 +61,14 @@ namespace MathForGames
             Raylib.SetTargetFPS(60);
 
             Scene scene = new Scene();
-            Player player = new Player('@',100, 10, 50, Color.DARKPURPLE, "Player");
-            Enemy actor = new Enemy('A', 5, 5, 10, Color.RED, player, "Actor");
+            Player player = new Player('@',5, 10, 50, Color.DARKPURPLE, "Player");
+            player.CollisionRadius = 20;
+            Enemy actor = new Enemy('A', 100, 5, 60, 100, 1, Color.RED, player, "Actor");
+            actor.CollisionRadius = 20;
             //UI section
-            UIText text = new UIText(10, 10, "TestTextBox", Color.BLUE, 70, 20, "This is test text. \nIt is not to be taken seriously as it is only a test.\nAnyone who says this isn't a test is lying and should be ignored.");
+            UIText text = new UIText(10, 10, "TestTextBox", Color.BLUE, 70, 70, 15, "This is test text. \nIt is not to be taken seriously as it is only a test.\nAnyone who says this isn't a test is lying and should be ignored.");
 
-            actor._speechText = text;
+            actor.SpeechText = text;
             scene.AddUIElement(text);
 
 
