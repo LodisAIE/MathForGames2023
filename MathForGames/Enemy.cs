@@ -29,8 +29,9 @@ namespace MathForGames
             set { _velocity = value; }
         }
 
-        public Enemy(char icon, float x, float y, float speed, float maxSightDistance, float maxViewAngle, Color color, Actor target, string name = "Actor")
-            : base(icon, x, y, color, name)
+        public Enemy(float x, float y, float speed, float maxSightDistance, float maxViewAngle,
+            Actor target, string name = "Actor", string path = "")
+            : base(x, y, name, path)
         {
             _speed = speed;
             _target = target;
@@ -72,6 +73,12 @@ namespace MathForGames
         public override void OnCollision(Actor actor)
         {
             Console.WriteLine("Collision occured");
+        }
+
+        public override void Draw()
+        {
+            base.Draw();
+            Collider.Draw();
         }
     }
 }

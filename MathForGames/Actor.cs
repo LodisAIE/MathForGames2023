@@ -6,21 +6,17 @@ using Raylib_cs;
 
 namespace MathForGames
 {
-    struct Icon
-    {
-        public char Symbol;
-        public Color Color;
-    }
-
-
     class Actor
     {
-        private Icon _icon;
         private string _name;
-        private Vector2 _position;
         private bool _started;
         private Vector2 _forward = new Vector2(1,0);
-        private float _collisionRadius;
+        private Collider _collider;
+        private Matrix3 _transform = Matrix3.Identity;
+        private Matrix3 _translation = Matrix3.Identity;
+        private Matrix3 _rotation = Matrix3.Identity;
+        private Matrix3 _scale = Matrix3.Identity;
+        private Sprite _sprite;
 
         /// <summary>
         /// True if the start function has been called for this actor
@@ -32,13 +28,12 @@ namespace MathForGames
 
         public Vector2 Position
         {
-            get { return _position; }
-            set { _position = value; }
-        }
-
-        public Icon Icon
-        {
-            get { return _icon; }
+            get { return new Vector2(_transform.M02, _transform.M12); }
+            set 
+            { 
+                _transform.M02 = value.X;
+                _transform.M12 = value.Y;
+            }
         }
 
         public Vector2 Forward
@@ -47,22 +42,33 @@ namespace MathForGames
             set { _forward = value; }
         }
 
-        public float CollisionRadius
+        public Sprite Sprite
         {
-            get { return _collisionRadius; }
-            set { _collisionRadius = value; }
+            get { return _sprite; }
+            set { _sprite = value; }
+        }
+
+        /// <summary>
+        /// The collider attached to this actor
+        /// </summary>
+        public Collider Collider
+        {
+            get { return _collider; }
+            set { _collider = value; }
         }
 
         public Actor(){}
 
-        public Actor(char icon, float x, float y, Color color, string name = "Actor") : 
-            this(icon, new Vector2 { X = x, Y = y}, color, name) {}
+        public Actor(float x, float y, string name = "Actor", string path = "") : 
+            this(new Vector2 { X = x, Y = y}, name, path) {}
 
-        public Actor(char icon, Vector2 position, Color color, string name = "Actor")
+        public Actor(Vector2 position, string name = "Actor", string path = "")
         {
-            _icon = new Icon { Symbol = icon, Color = color };
-            _position = position;
+            Position = position;
             _name = name;
+
+            if (path != "")
+                _sprite = new Sprite(path);
         }
 
         public virtual void Start()
@@ -72,12 +78,14 @@ namespace MathForGames
 
         public virtual void Update(float deltaTime)
         {
+            _transform = _translation * _rotation * _scale;
             Console.WriteLine(_name + ": " + Position.X + ", " + Position.Y);
         }
 
         public virtual void Draw()
         {
-            Raylib.DrawText(Icon.Symbol.ToString(), (int)Position.X, (int)Position.Y, 50, Icon.Color);
+            if (_sprite != null)
+                _sprite.Draw(_transform);
         }
 
         public void End()
@@ -97,10 +105,70 @@ namespace MathForGames
         /// <returns>True if the distance between the actors is less than the radii of the two combined</returns>
         public virtual bool CheckForCollision(Actor other)
         {
-            float combinedRadii = other.CollisionRadius + CollisionRadius;
-            float distance = Vector2.Distance(Position, other.Position);
+            //Return false if either actor doesn't have a collider attached
+            if (Collider == null || other.Collider == null)
+                return false;
 
-            return distance <= combinedRadii;
+            return Collider.CheckCollision(other);
+        }
+
+        /// <summary>
+        /// Sets the position of the actor
+        /// </summary>
+        /// <param name="translationX">The new x position</param>
+        /// <param name="translationY">The new y position</param>
+        public void SetTranslation(float translationX, float translationY)
+        {
+
+        }
+
+        /// <summary>
+        /// Applies the given values to the current translation
+        /// </summary>
+        /// <param name="translationX">The amount to move on the x</param>
+        /// <param name="translationY">The amount to move on the yparam>
+        public void Translate(float translationX, float translationY)
+        {
+
+        }
+
+        /// <summary>
+        /// Set the rotation of the actor.
+        /// </summary>
+        /// <param name="radians">The angle of the new rotation in radians.</param>
+        public void SetRotation(float radians)
+        {
+
+        }
+
+        /// <summary>
+        /// Adds a roation to the current transform's rotation.
+        /// </summary>
+        /// <param name="radians">The angle in radians to turn.</param>
+        public void Rotate(float radians)
+        {
+
+        }
+
+        /// <summary>
+        /// Sets the scale of the actor.
+        /// </summary>
+        /// <param name="x">The value to scale on the x axis.</param>
+        /// <param name="y">The value to scale on the y axis</param>
+        public void SetScale(float x, float y)
+        {
+            _scale.M00 = x;
+            _scale.M11 = y;
+        }
+
+        /// <summary>
+        /// Scales the actor by the given amount.
+        /// </summary>
+        /// <param name="x">The value to scale on the x axis.</param>
+        /// <param name="y">The value to scale on the y axis</param>
+        public void Scale(float x, float y)
+        {
+
         }
     }
 }

@@ -61,19 +61,27 @@ namespace MathForGames
             Raylib.SetTargetFPS(60);
 
             Scene scene = new Scene();
-            Player player = new Player('@',5, 10, 50, Color.DARKPURPLE, "Player");
-            player.CollisionRadius = 20;
-            Enemy actor = new Enemy('A', 100, 5, 60, 100, 1, Color.RED, player, "Actor");
-            actor.CollisionRadius = 20;
+            Player player = new Player(5, 5, 50, "Player", "Images/player.png");
+            player.SetScale(500, 50);
+            CircleCollider playerCircleCollider = new CircleCollider(20, player);
+            AABBCollider playerBoxCollider = new AABBCollider(50, 50, player);
+            player.Collider = playerCircleCollider;
+
+            Enemy enemy = new Enemy(100, 5, 60, 100, 1, player, "Actor", "Images/enemy.png");
+            enemy.SetScale(50, 50);
+            CircleCollider enemyCircleCollider = new CircleCollider(5, enemy);
+            AABBCollider enemyBoxCollider = new AABBCollider(50, 50, enemy);
+            enemy.Collider = enemyBoxCollider;
+
             //UI section
             UIText text = new UIText(10, 10, "TestTextBox", Color.BLUE, 70, 70, 15, "This is test text. \nIt is not to be taken seriously as it is only a test.\nAnyone who says this isn't a test is lying and should be ignored.");
 
-            actor.SpeechText = text;
+            enemy.SpeechText = text;
             scene.AddUIElement(text);
 
 
             scene.AddActor(player);
-            scene.AddActor(actor);
+            scene.AddActor(enemy);
             _currentSceneIndex = AddScene(scene);
             _scenes[_currentSceneIndex].Start();
         }
