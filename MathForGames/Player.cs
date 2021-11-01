@@ -49,7 +49,10 @@ namespace MathForGames
 
             Velocity = moveDirection.Normalized * Speed * deltaTime;
 
-            Position += Velocity;
+            if (Velocity.Magnitude > 0)
+                Forward = Velocity.Normalized;
+
+            LocalPosition += Velocity;
 
             base.Update(deltaTime);
         }

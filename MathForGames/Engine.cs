@@ -62,7 +62,9 @@ namespace MathForGames
 
             Scene scene = new Scene();
             Player player = new Player(5, 5, 50, "Player", "Images/player.png");
-            player.SetScale(500, 50);
+            player.SetScale(50, 50);
+            player.SetTranslation(300, 300);
+
             CircleCollider playerCircleCollider = new CircleCollider(20, player);
             AABBCollider playerBoxCollider = new AABBCollider(50, 50, player);
             player.Collider = playerCircleCollider;
