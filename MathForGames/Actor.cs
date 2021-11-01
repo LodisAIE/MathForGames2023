@@ -45,12 +45,12 @@ namespace MathForGames
 
         public Matrix3 GlobalTransform
         {
-            get; set;
+            get; private set;
         }
 
         public Matrix3 LocalTransform
         {
-            get; set;
+            get; private set;
         }
 
         public Actor Parent
