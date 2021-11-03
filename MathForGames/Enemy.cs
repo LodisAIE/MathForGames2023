@@ -10,7 +10,7 @@ namespace MathForGames
     class Enemy : Actor
     {
         private float _speed;
-        private Vector2 _velocity;
+        private Vector3 _velocity;
         private Actor _target;
         private float _maxSightDistance;
         public UIText SpeechText;
@@ -23,15 +23,15 @@ namespace MathForGames
             set { _speed = value; }
         }
 
-        public Vector2 Velocity
+        public Vector3 Velocity
         {
             get { return _velocity; }
             set { _velocity = value; }
         }
 
         public Enemy(float x, float y, float speed, float maxSightDistance, float maxViewAngle,
-            Actor target, string name = "Actor", string path = "")
-            : base(x, y, name, path)
+            Actor target, string name = "Actor", Shape shape = Shape.CUBE)
+            : base(x, y, name, shape)
         {
             _speed = speed;
             _target = target;
@@ -47,10 +47,8 @@ namespace MathForGames
 
         public override void Update(float deltaTime)
         {
-            SpeechText.Text = "Pls get away";
-            SpeechText.LocalPosition = LocalPosition + new Vector2(0, -5);
             //Create a vector that stores the move input
-            Vector2 moveDirection = (_target.LocalPosition - LocalPosition).Normalized;
+            Vector3 moveDirection = (_target.LocalPosition - LocalPosition).Normalized;
 
             Velocity = moveDirection * Speed * deltaTime;
 
@@ -62,10 +60,10 @@ namespace MathForGames
 
         public bool GetTargetInSight()
         {
-            Vector2 directionOfTarget = (_target.LocalPosition - LocalPosition).Normalized;
-            float distanceToTarget = Vector2.Distance(_target.LocalPosition, LocalPosition);
+            Vector3 directionOfTarget = (_target.LocalPosition - LocalPosition).Normalized;
+            float distanceToTarget = Vector3.Distance(_target.LocalPosition, LocalPosition);
 
-            float dotProduct = Vector2.DotProduct(directionOfTarget, Forward);
+            float dotProduct = Vector3.DotProduct(directionOfTarget, Forward);
 
             return MathF.Acos(dotProduct) < _maxViewAngle && distanceToTarget < _maxSightDistance;
         }

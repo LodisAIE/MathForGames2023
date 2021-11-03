@@ -14,6 +14,7 @@ namespace MathForGames
         private static int _currentSceneIndex;
         private Scene[] _scenes = new Scene[0];
         private Stopwatch _stopwatch = new Stopwatch();
+        private Camera3D _camera = new Camera3D();
 
         /// <summary>
         /// Called to begin the application
@@ -49,6 +50,20 @@ namespace MathForGames
             End();
         }
 
+        private void InitializeCamera()
+        { 
+            // Camera position
+            _camera.position = new System.Numerics.Vector3(0, 10, 10);
+            // Point the camera is focused on
+            _camera.target = new System.Numerics.Vector3(0, 0, 0);
+            // Camera up vector (rotation towards target)
+            _camera.up = new System.Numerics.Vector3(0, 1, 0);
+            // Camera field of view Y
+            _camera.fovy = 45;
+            //Camera mode type
+            _camera.projection = CameraProjection.CAMERA_PERSPECTIVE; 
+        }
+
         /// <summary>
         /// Called when the application starts 
         /// </summary>
@@ -60,34 +75,14 @@ namespace MathForGames
             Raylib.InitWindow(800, 450, "Math For Games");
             Raylib.SetTargetFPS(60);
 
+            InitializeCamera();
+
             Scene scene = new Scene();
-            Player player = new Player(5, 5, 50, "Player", "Images/player.png");
-            player.SetScale(100, 5);
-            player.SetTranslation(300, 300);
-
-            CircleCollider playerCircleCollider = new CircleCollider(20, player);
-            AABBCollider playerBoxCollider = new AABBCollider(50, 50, player);
-            player.Collider = playerCircleCollider;
-
-            Enemy enemy = new Enemy(100, 5, 60, 100, 1, player, "Actor", "Images/enemy.png");
-            enemy.SetScale(50, 50);
-            CircleCollider enemyCircleCollider = new CircleCollider(5, enemy);
-            AABBCollider enemyBoxCollider = new AABBCollider(50, 50, enemy);
-            enemy.Collider = enemyBoxCollider;
-
-            Actor testChild = new Actor(1, 1, "TestChild", "Images/enemy.png");
-            player.AddChild(testChild);
-
-            //UI section
-            UIText text = new UIText(10, 10, "TestTextBox", Color.BLUE, 70, 70, 15, "This is test text. \nIt is not to be taken seriously as it is only a test.\nAnyone who says this isn't a test is lying and should be ignored.");
-
-            enemy.SpeechText = text;
-            scene.AddUIElement(text);
+            Player player = new Player(0, 0, 50, "Player", Shape.SPHERE);
+            player.SetScale(1, 1, 1);
 
 
             scene.AddActor(player);
-            scene.AddActor(testChild);
-            //scene.AddActor(enemy);
             _currentSceneIndex = AddScene(scene);
             _scenes[_currentSceneIndex].Start();
         }
@@ -110,12 +105,16 @@ namespace MathForGames
         private void Draw()
         {
             Raylib.BeginDrawing();
-            Raylib.ClearBackground(Color.BLACK);
+            Raylib.BeginMode3D(_camera);
+
+            Raylib.ClearBackground(Color.RAYWHITE);
+            Raylib.DrawGrid(50, 1);
 
             //Adds all actor icons to buffer
             _scenes[_currentSceneIndex].Draw();
             _scenes[_currentSceneIndex].DrawUI();
 
+            Raylib.EndMode3D();
             Raylib.EndDrawing();
         }
 
