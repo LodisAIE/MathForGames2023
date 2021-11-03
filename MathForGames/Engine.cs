@@ -62,7 +62,7 @@ namespace MathForGames
 
             Scene scene = new Scene();
             Player player = new Player(5, 5, 50, "Player", "Images/player.png");
-            player.SetScale(50, 50);
+            player.SetScale(100, 5);
             player.SetTranslation(300, 300);
 
             CircleCollider playerCircleCollider = new CircleCollider(20, player);
@@ -75,6 +75,9 @@ namespace MathForGames
             AABBCollider enemyBoxCollider = new AABBCollider(50, 50, enemy);
             enemy.Collider = enemyBoxCollider;
 
+            Actor testChild = new Actor(1, 1, "TestChild", "Images/enemy.png");
+            player.AddChild(testChild);
+
             //UI section
             UIText text = new UIText(10, 10, "TestTextBox", Color.BLUE, 70, 70, 15, "This is test text. \nIt is not to be taken seriously as it is only a test.\nAnyone who says this isn't a test is lying and should be ignored.");
 
@@ -83,7 +86,8 @@ namespace MathForGames
 
 
             scene.AddActor(player);
-            scene.AddActor(enemy);
+            scene.AddActor(testChild);
+            //scene.AddActor(enemy);
             _currentSceneIndex = AddScene(scene);
             _scenes[_currentSceneIndex].Start();
         }

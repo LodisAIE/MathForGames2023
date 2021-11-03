@@ -38,34 +38,62 @@ namespace MathForGames
             }
         }
 
+        /// <summary>
+        /// The position of this actor in the world
+        /// </summary>
         public Vector2 WorldPosition
         {
-            get; set;
+            //Return the global transform's T column
+            get { return new Vector2(_globalTransform.M02, _globalTransform.M12); }
+            set
+            {
+                //If the actor has a parent...
+                if (Parent != null)
+                {
+                    //...convert the world cooridinates into local cooridinates and translate the actor
+                    float xOffset = (value.X - Parent.WorldPosition.X) / new Vector2(_globalTransform.M00, _globalTransform.M10).Magnitude;
+                    float yOffset = (value.Y - Parent.WorldPosition.Y) / new Vector2(_globalTransform.M10, _globalTransform.M11).Magnitude;
+                    SetTranslation(xOffset, yOffset);
+                }
+                //If this actor doesn't have a parent...
+                else
+                    //...set local position to be the given value
+                    LocalPosition = value;
+            }
         }
 
         public Matrix3 GlobalTransform
         {
-            get; private set;
+            get { return _globalTransform; }
+            private set { _globalTransform = value; }
         }
 
         public Matrix3 LocalTransform
         {
-            get; private set;
+            get { return _localTransform; }
+            private set { _localTransform = value; }
         }
 
         public Actor Parent
         {
-            get; set;
+            get { return _parent; }
+            set { _parent = value; }   
         }
 
         public Actor[] Children
         {
-            get;
+            get { return _children; }
         }
 
         public Vector2 Size
         {
-            get { return new Vector2(_scale.M00, _scale.M11); }
+            get 
+            {
+                float xScale = new Vector2(_scale.M00, _scale.M10).Magnitude;
+                float yScale = new Vector2(_scale.M01, _scale.M11).Magnitude;
+
+                return new Vector2(xScale, yScale);
+            }
             set { SetScale(value.X, value.Y); }
         }
 
@@ -110,17 +138,71 @@ namespace MathForGames
 
         public void UpdateTransforms()
         {
+            _localTransform = _translation * _rotation * _scale;
 
+            if (Parent != null)
+                GlobalTransform = Parent.GlobalTransform * LocalTransform;
+            else
+                GlobalTransform = LocalTransform;
         }
 
         public void AddChild(Actor child)
         {
+            //Create a temp array larger than the original
+            Actor[] tempArray = new Actor[_children.Length + 1];
 
+            //Copy all values from the original array into the temp array
+            for (int i = 0; i < _children.Length; i++)
+            {
+                tempArray[i] = _children[i];
+            }
+
+            //Add the new actor to the end of the new array
+            tempArray[_children.Length] = child;
+
+            //Set the parent of the actor to be this actor
+            child.Parent = this;
+
+            //Set the old array to be the new array
+            _children = tempArray;
         }
 
         public bool RemoveChild(Actor child)
         {
+            //Create a variable to store if the removal was successful
+            bool actorRemoved = false;
 
+            //Create a new array that is smaller than the original
+            Actor[] tempArray = new Actor[_children.Length - 1];
+
+            //Copy all values except the actor we don't want into the new array
+            int j = 0;
+            for (int i = 0; i < _children.Length; i++)
+            {
+                //If the actor that the loop is on is not the one to remove...
+                if (_children[i] != child)
+                {
+                    //...add the actor into the new array and increment the temp array counter
+                    tempArray[j] = _children[i];
+                    j++;
+                }
+                //Otherwise if this actor is the one to remove...
+                else
+                    //...set actorRemoved to true
+                    actorRemoved = true;
+            }
+
+            //If the actor removal was successful...
+            if (actorRemoved)
+            {
+                //...set the old array to be the new array
+                _children = tempArray;
+
+                //Set the parent of the child to be nothing
+                child.Parent = null;
+            }
+
+            return actorRemoved;
         }
 
         public virtual void Start()
@@ -130,14 +212,16 @@ namespace MathForGames
 
         public virtual void Update(float deltaTime)
         {
-            _localTransform = _translation * _rotation * _scale;
+
+            UpdateTransforms();
+
             Console.WriteLine(_name + ": " + LocalPosition.X + ", " + LocalPosition.Y);
         }
 
         public virtual void Draw()
         {
             if (_sprite != null)
-                _sprite.Draw(_localTransform);
+                _sprite.Draw(_globalTransform);
         }
 
         public void End()

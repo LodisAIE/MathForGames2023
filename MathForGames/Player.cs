@@ -50,11 +50,12 @@ namespace MathForGames
             Velocity = moveDirection.Normalized * Speed * deltaTime;
 
             if (Velocity.Magnitude > 0)
-                Forward = Velocity.Normalized;
+                //Forward = Velocity.Normalized;
 
             LocalPosition += Velocity;
 
             base.Update(deltaTime);
+            Rotate(2f);
         }
 
         public override void OnCollision(Actor actor)
