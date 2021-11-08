@@ -15,6 +15,7 @@ namespace MathLibrary
         /// </summary>
         public float Magnitude
         {
+            get { return 0; }
         }
 
         /// <summary>
@@ -22,10 +23,14 @@ namespace MathLibrary
         /// </summary>
         public Vector3 Normalized
         {
+            get { return new Vector3(); }
         }
 
         public Vector3(float x, float y, float z)
         {
+            X = x;
+            Y = y;
+            Z = z;
         }
 
         /// <summary>
@@ -34,6 +39,7 @@ namespace MathLibrary
         /// <returns>The result of the normalization</returns>
         public Vector3 Normalize()
         {
+            return new Vector3();
         }
 
         /// <param name="lhs"></param>
@@ -41,10 +47,12 @@ namespace MathLibrary
         /// <returns>The dot product of the two vectors given</returns>
         public static float DotProduct(Vector3 lhs, Vector3 rhs)
         {
+            return 0;
         }
 
         public static float Distance(Vector3 lhs, Vector3 rhs)
         {
+            return 0;
         }
 
         /// <summary>
@@ -56,6 +64,7 @@ namespace MathLibrary
         /// <returns>The result of the vector addition</returns>
         public static Vector3 operator +(Vector3 lhs, Vector3 rhs)
         {
+            return new Vector3();
         }
 
         /// <summary>
@@ -67,6 +76,7 @@ namespace MathLibrary
         /// <returns>The result of the vector subtraction</returns>
         public static Vector3 operator -(Vector3 lhs, Vector3 rhs)
         {
+            return new Vector3();
         }
 
         /// <summary>
@@ -77,6 +87,7 @@ namespace MathLibrary
         /// <returns>The result of the vector scaling</returns>
         public static Vector3 operator *(Vector3 lhs, float rhs)
         {
+            return new Vector3();
         }
 
         /// <summary>
@@ -87,6 +98,7 @@ namespace MathLibrary
         /// <returns>The result of the vector scaling</returns>
         public static Vector3 operator *(float lhs, Vector3 rhs)
         {
+            return new Vector3();
         }
 
         /// <summary>
@@ -97,6 +109,7 @@ namespace MathLibrary
         /// <returns>The result of the vector division</returns>
         public static Vector3 operator /(Vector3 lhs, float rhs)
         {
+            return new Vector3();
         }
 
         /// <summary>
@@ -107,6 +120,7 @@ namespace MathLibrary
         /// <returns>True if the x values of both vectors match and the y values match</returns>
         public static bool operator ==(Vector3 lhs, Vector3 rhs)
         {
+            return false;
         }
 
         /// <summary>
@@ -117,6 +131,7 @@ namespace MathLibrary
         /// <returns>True if the x values of both vectors don't match and the y values don't match</returns>
         public static bool operator !=(Vector3 lhs, Vector3 rhs)
         {
+            return false;
         }
     }
 }
